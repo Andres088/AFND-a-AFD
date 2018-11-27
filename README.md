@@ -20,7 +20,7 @@ Integrantes del equipo:
 - Jair Enriquez
 - Ricardo García
 - Moisés Quispe
-- Mathias
+- Alexander Jave
 
 Noviembre del 2018
 
