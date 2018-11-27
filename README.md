@@ -14,7 +14,7 @@ Realizado con Visual Studio 2017 en C++
 
 Proyecto grupal para el curso de *Teoría de Lenguajes de Programación y Métodos de Traducción* de la **UTP**, dictado por el profesor Carlos De Souza.
 
-Integrantes del equipos:
+Integrantes del equipo:
 
 - Andres Diaz
 - Jair Enriquez
