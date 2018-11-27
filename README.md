@@ -24,5 +24,4 @@ Integrantes del equipo:
 
 Noviembre del 2018
 
-AFD: Autómata finito determinista
-AFND: Automáta finito no determinista
+AFD: Autómata finito determinista / AFND: Automáta finito no determinista
