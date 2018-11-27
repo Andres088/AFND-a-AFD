@@ -1,4 +1,4 @@
-# Aplicativo en consola para convertir AFND a AFD *
+# Aplicativo en consola para convertir AFND a AFD
 
 *Estado del proyecto: al 70%*
 
