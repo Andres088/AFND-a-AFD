@@ -8,8 +8,9 @@ Funciones:
 - Convierte un autómata de AFND a AFD.
 - Imprime en pantalla los estados y funciones del autómata.
 - (Pendiente) Eliminar estados no accesibles.
+- (Pendiente) Colocar y mostrar estados finales de aceptacion.
 
-Realizado con Visual Studio 2017 en C++
+Realizado con Visual Studio 2017 en C++, con una versión para DevC++ 5.7.1
 
 Proyecto grupal para el curso de *Teoría de Lenguajes de Programación y Métodos de Traducción* de la **UTP**, dictado por el profesor Carlos De Souza.
 
