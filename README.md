@@ -22,6 +22,6 @@ Integrantes del equipo:
 - Moisés Quispe
 - Alexander Jave
 
-Noviembre del 2018
+Diciembre del 2018
 
 AFD: Autómata finito determinista / AFND: Automáta finito no determinista
