@@ -32,5 +32,9 @@ public:
 	vector<string> outputs_por_valor(string);
 	void reemplazar_outputs(vector<string>, vector<string>);
 	void mostrar_detalle();
+	string devolver(string);
+	bool tiene_outputs(); // verifica si un estado tiene outputs no nulos
+	bool get_final();
+	void set_final(bool);
 };
 

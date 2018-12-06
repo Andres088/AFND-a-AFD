@@ -1,8 +1,6 @@
 #include "Automata.h"
 
 
-
-
 Automata::Automata(string nom)
 {
 	nombre = nom;
@@ -101,6 +99,29 @@ void Automata::convertir_a_AFD() {
 
 		outputs_multiples = encontrar_outputs_multiples();
 	}
+	if (iteracion > 0) { // Creacion del estado final con resultados nulos
+
+		string ultimo_estado;
+		int ultimo_numero = estados.size();
+		stringstream ss;
+		ss << "S" << ultimo_numero;
+		ultimo_estado = ss.str();
+		Estado e(ultimo_estado);
+		
+		int num_alfabeto = alfabeto.size();
+
+		for (int i = 0; i < num_alfabeto; i++) {
+
+			string nombre_funcion;
+			stringstream ss;
+			ss << "f" << i;
+			nombre_funcion = ss.str();
+			vector<string> output; output.push_back("--");
+			Funcion f(nombre_funcion, alfabeto.at(i), output);
+			e.colocar_funcion(f);
+		}
+		colocar_estado(e);
+	}
 }
 
 Estado Automata::fusionar_estados(vector<Estado> estados, string nombre) {
@@ -192,6 +213,7 @@ void Automata::reemplazar_outputs_por_nuevo_estado(vector<string> outputs_buscad
 
 		estados.at(n).reemplazar_outputs(outputs_buscados, nuevo_output);
 	}
+
 }
 
 

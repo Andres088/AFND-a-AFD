@@ -7,8 +7,6 @@ Estado::Estado(string nom)
 	existe = true;
 }
 
-
-
 string Estado::get_nombre() {
 	return nombre;
 }
@@ -111,4 +109,36 @@ vector<string> Estado::outputs_por_valor(string valor) {
 	}
 
 	return outputs_nuevo;
+}
+
+string Estado::devolver(string input) {
+	
+	string output("");
+
+	int num_funciones = funciones.size();
+
+	for (int i = 0; i < num_funciones; i++) {
+		Funcion f = funciones.at(i);
+		if (f.get_input() == input) return f.get_outputs().at(0);
+	}
+	return output;
+}
+
+bool Estado::get_final() {
+	return final;
+}
+
+void Estado::set_final(bool fin) {
+	final = fin;
+}
+
+bool Estado::tiene_outputs() {
+	int num_funciones = funciones.size();
+
+	for (int i = 0; i < num_funciones; i++) {
+		Funcion f = funciones.at(i);
+		if (f.get_outputs().at(0) != "--") return false;
+	}
+
+	return true;
 }

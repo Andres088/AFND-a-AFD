@@ -22,5 +22,6 @@ public:
 	void agregar_outputs(Funcion);
 	void reemplazar_outputs(vector<string>);
 
+
 };
 

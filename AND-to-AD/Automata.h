@@ -25,7 +25,6 @@ public:
 	string mostrar_funciones();
 	void convertir_a_AFD();
 	vector<string> encontrar_outputs_multiples();
-	bool comparar_outputs(vector<string>, vector<string>);
 	vector<Estado> encontrar_estados_con_cierto_output_multiple(vector<string>);
 	Estado encontrar_estado(string);
 	Estado fusionar_estados(vector<Estado>, string);
