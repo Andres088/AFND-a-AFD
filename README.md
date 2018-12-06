@@ -12,7 +12,7 @@ Funciones:
 
 Realizado con Visual Studio 2017 en C++, con una versión para DevC++ 5.7.1
 
-Proyecto grupal para el curso de *Teoría de Lenguajes de Programación y Métodos de Traducción* de la **UTP**, dictado por el profesor Carlos De Souza.
+Proyecto individual para el curso de *Teoría de Lenguajes de Programación y Métodos de Traducción* de la **UTP**, dictado por el profesor Carlos De Souza Ferreyra.
 
 Diciembre del 2018
 
