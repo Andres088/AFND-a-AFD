@@ -1,6 +1,6 @@
 # Aplicativo en consola para convertir AFND a AFD
 
-*Estado del proyecto: al 70%*
+*Estado del proyecto: al 80%*
 
 Funciones:
 - Puede tomar valores para construir un automáta cualquiera.
@@ -8,7 +8,6 @@ Funciones:
 - Convierte un autómata de AFND a AFD.
 - Imprime en pantalla los estados y funciones del autómata.
 - (Pendiente) Eliminar estados no accesibles.
-- (Pendiente) Agrega el estado nulo al final del autómata.
 
 Realizado con Visual Studio 2017 en C++
 
