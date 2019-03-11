@@ -27,9 +27,6 @@
     <ClCompile Include="Funcion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ayuda.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Estado.h">
@@ -39,9 +36,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Funcion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Ayuda.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

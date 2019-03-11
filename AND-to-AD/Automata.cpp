@@ -14,18 +14,6 @@ void Automata::colocar_estado(Estado e) {
 	estados.push_back(e);
 }
 
-string Automata::mostrar_alfabeto() {
-
-	int tamano = alfabeto.size();
-	string cadena("");
-
-	for (int i = 0; i < tamano; i++) {
-		string temp(alfabeto.at(i));
-		cadena = cadena + temp;
-	}
-	return cadena;
-}
-
 string Automata::buscar_valor_alfabeto(int i) {
 
 	return alfabeto.at(i);
@@ -65,10 +53,12 @@ void Automata::colocar_nombre(string nom) {
 
 void Automata::convertir_a_AFD() {
 
+	// Busca outputs multiples en el automata para reemplazarlos por estados unicos
+
 	vector<string> outputs_multiples = encontrar_outputs_multiples();
 	int iteracion = 0;
 
-	while (outputs_multiples.size()!=0) { // Busca outputs multiples en el automata para reemplazarlos por estados unicos
+	while (outputs_multiples.size()!=0) { // Verifica que no hayan outputs multiples
 
 		iteracion++;
 		if (iteracion == 3) break;
@@ -81,25 +71,29 @@ void Automata::convertir_a_AFD() {
 		ss << "S" << ultimo_numero;
 		ultimo_estado = ss.str();
 		
-		// Definir los estados a heredar en base a outputs multiples
+		// Definir los estados a unir en base a outputs multiples
 
-		vector<Estado>estados_a_heredar;
+		vector<Estado>estados_a_unir;
 		int num_outputs = outputs_multiples.size();
 
 		for (int i = 0; i < num_outputs; i++) {
-			estados_a_heredar.push_back(encontrar_estado(outputs_multiples.at(i)));
+			estados_a_unir.push_back(encontrar_estado(outputs_multiples.at(i)));
 		}
-		Estado nuevo_estado = fusionar_estados(estados_a_heredar,ultimo_estado);
+		Estado nuevo_estado = unir_estados(estados_a_unir,ultimo_estado);
 
-		// Reemplazar outputs multiples por nuevo estado
+		// Se reemplazan outputs multiples encontrados por nuevo estado
 
 		reemplazar_outputs_por_nuevo_estado(outputs_multiples,nuevo_estado);
-
 		estados.push_back(nuevo_estado);
+
+		// Se buscan nuevamente outputs multiples
 
 		outputs_multiples = encontrar_outputs_multiples();
 	}
-	if (iteracion > 0) { // Creacion del estado final con resultados nulos
+
+	// Se crea el estado final con resultados nulos
+
+	if (iteracion > 0) { 
 
 		string ultimo_estado;
 		int ultimo_numero = estados.size();
@@ -124,7 +118,7 @@ void Automata::convertir_a_AFD() {
 	}
 }
 
-Estado Automata::fusionar_estados(vector<Estado> estados, string nombre) {
+Estado Automata::unir_estados(vector<Estado> estados, string nombre) {
 
 	Estado nuevo_estado(nombre);
 	
@@ -147,8 +141,6 @@ Estado Automata::fusionar_estados(vector<Estado> estados, string nombre) {
 	nuevo_estado.colocar_funcion(funciones_base);
 	return nuevo_estado;
 }
-
-
 
 Estado Automata::encontrar_estado(string nombre) {
 	
@@ -179,27 +171,6 @@ vector<string> Automata::encontrar_outputs_multiples() {
 	}
 	vector<string> vacio; 
 	return vacio;
-}
-
-vector<Estado> Automata::encontrar_estados_con_cierto_output_multiple(vector<string> outputs_buscados) {
-
-	vector<Estado> estados_encontrados;
-	int num_estados = estados.size();
-	
-
-	for (int n = 0; n < num_estados; n++) { // Nivel de estados
-
-		Estado e = estados.at(n);
-		int num_funciones = e.get_num_funciones();
-
-		for (int i = 0; i < num_funciones; i++) { // Nivel de funciones
-
-			Funcion f = e.get_funcion(i);
-			vector<string> outputs = f.get_outputs();
-			if (Ayuda::comparar_outputs(outputs, outputs_buscados)) estados_encontrados.push_back(e);
-		}
-	}
-	return estados_encontrados; 
 }
 
 void Automata::reemplazar_outputs_por_nuevo_estado(vector<string> outputs_buscados, Estado nuevo_estado) {

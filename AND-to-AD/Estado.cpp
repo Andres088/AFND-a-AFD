@@ -15,28 +15,20 @@ vector<Funcion> Estado::get_funciones() {
 	return funciones;
 }
 
-void Estado::colocar_si_existe(bool existencia) {
+void Estado::set_existe(bool existencia) {
 	existe = existencia;
 }
 
-bool Estado::indicar_si_existe() {
+bool Estado::get_existe() {
 	return existe;
 }
 
-void Estado::colocar_estado_contenido(string estado) {
-	estados_contenidos.push_back(estado);
+bool Estado::get_final() {
+	return final;
 }
 
-void Estado::colocar_estado_contenido(vector<string> estados) {
-	estados_contenidos = estados;
-}
-
-void Estado::colocar_funcion(Funcion funcion) {
-	funciones.push_back(funcion);
-}
-
-void Estado::colocar_funcion(vector<Funcion> nuevas_funciones) {
-	funciones = nuevas_funciones;
+void Estado::set_final(bool fin) {
+	final = fin;
 }
 
 int Estado::get_num_funciones() {
@@ -49,6 +41,18 @@ Funcion Estado::get_funcion(int n) {
 	return funciones.at(n);
 }
 
+void Estado::colocar_estado_contenido(string estado) {
+	estados_contenidos.push_back(estado);
+}
+
+void Estado::colocar_funcion(Funcion funcion) {
+	funciones.push_back(funcion);
+}
+
+void Estado::colocar_funcion(vector<Funcion> nuevas_funciones) {
+	funciones = nuevas_funciones;
+}
+
 void Estado::reemplazar_outputs(vector<string> outputs_buscados, vector<string> outputs_nuevos) {
 
 	int num_funciones = funciones.size();
@@ -56,89 +60,29 @@ void Estado::reemplazar_outputs(vector<string> outputs_buscados, vector<string> 
 	for (int i = 0; i < num_funciones; i++) { // Nivel de funciones
 
 		vector<string> outputs = funciones.at(i).get_outputs();
-		if (Ayuda::comparar_outputs(outputs, outputs_buscados)) funciones.at(i).reemplazar_outputs(outputs_nuevos);
+		if (comparar_outputs(outputs, outputs_buscados)) funciones.at(i).reemplazar_outputs(outputs_nuevos);
 	}
 }
 
-void Estado::mostrar_detalle() {
+bool Estado::comparar_outputs(vector<string> outputs1, vector<string> outputs2) {
 
-	cout <<"Detalle del estado: " << nombre << endl;
+	bool match = true;
+	int num_outputs1 = outputs1.size();
+	int num_outputs2 = outputs2.size();
 
-	cout << "Estados contenidos: ";
-	int num_estados = estados_contenidos.size();
-	for (int i = 0; i < num_estados; i++) {
-		cout << estados_contenidos.at(i) << " ";
-	}
+	if (num_outputs1 != num_outputs2) return false;
 
-	cout << endl << "Funciones: " << endl;
-	int num_funciones = funciones.size();
+	for (int i = 0; i < num_outputs1; i++) {
 
-	for (int i = 0; i < num_funciones; i++) { // Nivel de funciones
+		string output1 = outputs1.at(i);
+		bool temp = false;
 
-		Funcion f = funciones.at(i);
-		vector<string> outputs = f.get_outputs();
-		int num_outputs = outputs.size();
-		string output = "";
+		for (int j = 0; j < num_outputs2; j++) {
 
-		for (int j = 0; j < num_outputs; j++) { // Nivel de outputs
-
-			output = output + " " + outputs.at(j);
+			string output2 = outputs2.at(j);
+			if (output1 == output2) temp = temp || true;
 		}
-		cout <<  "f(" << nombre << "," << f.get_input() << "): " << output << endl;
+		match = match && temp;
 	}
-}
-
-vector<string> Estado::outputs_por_valor(string valor) {
-
-	int num_funciones = funciones.size();
-	vector <string> outputs_nuevo;
-
-	for (int i = 0; i < num_funciones; i++) { // Nivel de funciones
-
-		string input = funciones.at(i).get_input();
-		vector<string> outputs = funciones.at(i).get_outputs();
-		int num_outputs = outputs.size();
-
-		if (input == valor) {
-
-			for (int j = 0; j < num_outputs; j++) { // Nivel de outputs
-				string output = outputs.at(j);
-				outputs_nuevo.push_back(output);
-			}
-		}
-	}
-
-	return outputs_nuevo;
-}
-
-string Estado::devolver(string input) {
-	
-	string output("");
-
-	int num_funciones = funciones.size();
-
-	for (int i = 0; i < num_funciones; i++) {
-		Funcion f = funciones.at(i);
-		if (f.get_input() == input) return f.get_outputs().at(0);
-	}
-	return output;
-}
-
-bool Estado::get_final() {
-	return final;
-}
-
-void Estado::set_final(bool fin) {
-	final = fin;
-}
-
-bool Estado::tiene_outputs() {
-	int num_funciones = funciones.size();
-
-	for (int i = 0; i < num_funciones; i++) {
-		Funcion f = funciones.at(i);
-		if (f.get_outputs().at(0) != "--") return false;
-	}
-
-	return true;
+	return match;
 }

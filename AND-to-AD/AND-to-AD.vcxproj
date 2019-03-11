@@ -153,13 +153,11 @@
   <ItemGroup>
     <ClCompile Include="AND-to-AD.cpp" />
     <ClCompile Include="Automata.cpp" />
-    <ClCompile Include="Ayuda.cpp" />
     <ClCompile Include="Estado.cpp" />
     <ClCompile Include="Funcion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Automata.h" />
-    <ClInclude Include="Ayuda.h" />
     <ClInclude Include="Estado.h" />
     <ClInclude Include="Funcion.h" />
   </ItemGroup>

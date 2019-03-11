@@ -5,8 +5,9 @@
 #include <iostream>
 #include <vector>
 
-Funcion::Funcion(string id, string in, vector<string> out)
+Funcion::Funcion(string id_, string in, vector<string> out)
 {
+	id = id_;
 	input = in;
 	outputs = out;
 }

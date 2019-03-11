@@ -8,33 +8,28 @@ using namespace std;
 
 class Estado
 {
-	bool final;
 	string nombre;
-	vector<string> estados_contenidos; 
+	bool final; // Si es un estado de aceptación
+	bool existe; // Si es un estado que ha sido descartado	
+	vector<string> estados_contenidos; // Si es un estado producto de una unión
 	vector<Funcion> funciones;
-	bool existe; 
-
-
+	 
 
 public:
 
 	Estado(string);
 	string get_nombre();
-	void colocar_si_existe(bool);
-	bool indicar_si_existe();
-	void colocar_estado_contenido(string);
-	void colocar_estado_contenido(vector<string>);
-	void colocar_funcion(Funcion);
-	void colocar_funcion(vector<Funcion>);
-	int get_num_funciones();
-	Funcion get_funcion(int);
-	vector<Funcion> get_funciones();
-	vector<string> outputs_por_valor(string);
-	void reemplazar_outputs(vector<string>, vector<string>);
-	void mostrar_detalle();
-	string devolver(string);
-	bool tiene_outputs(); // verifica si un estado tiene outputs no nulos
+	void set_existe(bool);
+	bool get_existe();
 	bool get_final();
 	void set_final(bool);
+	Funcion get_funcion(int);
+	vector<Funcion> get_funciones();
+	int get_num_funciones();
+	void colocar_estado_contenido(string);
+	void colocar_funcion(Funcion);
+	void colocar_funcion(vector<Funcion>);
+	void reemplazar_outputs(vector<string>, vector<string>);
+	bool comparar_outputs(vector<string>, vector <string>);
 };
 
