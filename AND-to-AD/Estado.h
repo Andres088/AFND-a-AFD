@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Funcion.h"
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class Estado
@@ -31,5 +32,6 @@ public:
 	void colocar_funcion(vector<Funcion>);
 	void reemplazar_outputs(vector<string>, vector<string>);
 	bool comparar_outputs(vector<string>, vector <string>);
+	vector<string> outputs_unicos();
 };
 

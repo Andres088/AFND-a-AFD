@@ -27,5 +27,7 @@ public:
 	Estado encontrar_estado(string);
 	Estado unir_estados(vector<Estado>, string);
 	void reemplazar_outputs_por_nuevo_estado(vector<string>, Estado);
+	void remover_estados_no_accesibles();
+	bool existe(string, vector<string>);
 };
 

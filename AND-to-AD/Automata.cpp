@@ -187,4 +187,78 @@ void Automata::reemplazar_outputs_por_nuevo_estado(vector<string> outputs_buscad
 
 }
 
+void Automata::remover_estados_no_accesibles() {
 
+	vector<string>estados_accedidos;
+	estados_accedidos.push_back("S0");
+	int num_estados = estados.size();
+	int num_estados_accedidos = 1;
+	Estado estado_activo = estados.at(0);
+	vector<string>estados_revisados;
+	estados_revisados.push_back("S0");
+	vector<Estado>estados_actualizados;
+	estados_actualizados.push_back(estado_activo);
+	
+	while (num_estados_accedidos < num_estados) {
+
+		vector<string> outputs_estado_activo = estado_activo.outputs_unicos();
+		int num_outputs_unicos = outputs_estado_activo.size();
+
+		cout << "Estado activo " << estado_activo.get_nombre() << endl;
+		cout << "Outputs: ";
+
+		for (int i = 0; i < num_outputs_unicos; i++) {
+
+			string output = outputs_estado_activo.at(i);
+
+			cout << output << " ";
+
+			if (!existe(output, estados_accedidos)){
+				if (output != "--") {
+					estados_accedidos.push_back(output);
+				}
+			}
+		}
+
+		cout << endl << endl;
+
+		num_estados_accedidos = estados_accedidos.size();
+		bool finalizar_while = false;
+
+		for (int j = 0; j < num_estados_accedidos; j++) {
+
+			string estado_accedido = estados_accedidos.at(j);
+			if (!existe(estado_accedido, estados_revisados)) {
+				estados_revisados.push_back(estado_accedido);
+				estado_activo = encontrar_estado(estado_accedido);
+				estados_actualizados.push_back(estado_activo);
+				break;
+			}
+
+			if (j == num_estados_accedidos - 1) {
+				finalizar_while = true;
+			}
+		}
+		
+		if (finalizar_while) break;
+	}
+
+
+	for (int l = 0; l < num_estados_accedidos; l++) {
+		cout << estados_accedidos.at(l) << " ";
+	}
+
+	cout << endl;
+
+	for (int k = 0; k < num_estados; k++) {
+		Estado e = estados.at(k);
+		cout << e.get_nombre() << " ";
+	}
+
+	estados = estados_actualizados;
+}
+
+bool Automata::existe(string busqueda, vector<string> lista) {
+
+	return (std::find(lista.begin(), lista.end(), busqueda) != lista.end());
+}

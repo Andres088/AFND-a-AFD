@@ -86,3 +86,27 @@ bool Estado::comparar_outputs(vector<string> outputs1, vector<string> outputs2) 
 	}
 	return match;
 }
+
+vector<string> Estado::outputs_unicos() {
+
+	vector<string> outputs_unicos;
+
+	int num_funciones = funciones.size();
+
+	for (int i = 0; i < num_funciones; i++) { // Nivel de funciones
+
+		vector<string> outputs = funciones.at(i).get_outputs();
+		int num_outputs = outputs.size();
+
+		for (int j = 0; j < num_outputs; j++) { // Nivel de outputs
+
+			string output = outputs.at(j);
+			if (!(std::find(outputs_unicos.begin(), outputs_unicos.end(), output) != outputs_unicos.end())) {
+				if (output != "--") {
+					outputs_unicos.push_back(output);
+				}
+			}
+		}
+	}
+	return outputs_unicos;
+}
