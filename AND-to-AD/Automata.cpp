@@ -84,7 +84,7 @@ void Automata::convertir_a_AFD() {
 		// Se reemplazan outputs multiples encontrados por nuevo estado
 
 		reemplazar_outputs_por_nuevo_estado(outputs_multiples,nuevo_estado);
-		estados.push_back(nuevo_estado);
+		colocar_estado(nuevo_estado);
 
 		// Se buscan nuevamente outputs multiples
 
@@ -115,7 +115,14 @@ void Automata::convertir_a_AFD() {
 			e.colocar_funcion(f);
 		}
 		colocar_estado(e);
+
+		// Se renombran los outputs nulos con el estado final
+
+		vector<string> output_nulo; 
+		output_nulo.push_back("--");
+		reemplazar_outputs_por_nuevo_estado(output_nulo, e);
 	}
+
 }
 
 Estado Automata::unir_estados(vector<Estado> estados, string nombre) {
@@ -197,21 +204,20 @@ void Automata::remover_estados_no_accesibles() {
 	vector<string>estados_revisados;
 	estados_revisados.push_back("S0");
 	vector<Estado>estados_actualizados;
-	estados_actualizados.push_back(estado_activo);
 	
 	while (num_estados_accedidos < num_estados) {
 
 		vector<string> outputs_estado_activo = estado_activo.outputs_unicos();
 		int num_outputs_unicos = outputs_estado_activo.size();
 
-		cout << "Estado activo " << estado_activo.get_nombre() << endl;
-		cout << "Outputs: ";
+		// cout << "Estado activo " << estado_activo.get_nombre() << endl; // Pruebas
+		// cout << "Outputs: "; // Pruebas
 
 		for (int i = 0; i < num_outputs_unicos; i++) {
 
 			string output = outputs_estado_activo.at(i);
 
-			cout << output << " ";
+			// cout << output << " "; // Pruebas
 
 			if (!existe(output, estados_accedidos)){
 				if (output != "--") {
@@ -220,7 +226,7 @@ void Automata::remover_estados_no_accesibles() {
 			}
 		}
 
-		cout << endl << endl;
+		// cout << endl << endl; // Pruebas
 
 		num_estados_accedidos = estados_accedidos.size();
 		bool finalizar_while = false;
@@ -231,7 +237,6 @@ void Automata::remover_estados_no_accesibles() {
 			if (!existe(estado_accedido, estados_revisados)) {
 				estados_revisados.push_back(estado_accedido);
 				estado_activo = encontrar_estado(estado_accedido);
-				estados_actualizados.push_back(estado_activo);
 				break;
 			}
 
@@ -243,22 +248,35 @@ void Automata::remover_estados_no_accesibles() {
 		if (finalizar_while) break;
 	}
 
+	// Pruebas
 
-	for (int l = 0; l < num_estados_accedidos; l++) {
-		cout << estados_accedidos.at(l) << " ";
+	//for (int l = 0; l < num_estados_accedidos; l++) {
+	//	cout << estados_accedidos.at(l) << " ";
+	//}
+
+	//cout << endl;
+
+	//for (int k = 0; k < num_estados; k++) {
+	//	Estado e = estados.at(k);
+	//	cout << e.get_nombre() << " ";
+	//}
+
+	num_estados_accedidos = estados_accedidos.size();
+	sort(estados_accedidos.begin(), estados_accedidos.end());
+
+	for (int m = 0; m < num_estados_accedidos; m++) {
+		Estado est = encontrar_estado(estados_accedidos.at(m));
+		estados_actualizados.push_back(est);
 	}
-
-	cout << endl;
-
-	for (int k = 0; k < num_estados; k++) {
-		Estado e = estados.at(k);
-		cout << e.get_nombre() << " ";
-	}
-
+	
 	estados = estados_actualizados;
+}
+
+void renombrar_nulos() {
+
 }
 
 bool Automata::existe(string busqueda, vector<string> lista) {
 
-	return (std::find(lista.begin(), lista.end(), busqueda) != lista.end());
+	return find(lista.begin(), lista.end(), busqueda) != lista.end();
 }
