@@ -79,7 +79,6 @@ void Automata::convertir_a_AFD() {
 		outputs_multiples_recorridos.push_back(outputs_multiples);
 
 		iteracion++;
-		//if (iteracion == 7) break; // Pruebas
 
 		// Se crea un nombre para un estado unico nuevo
 
@@ -89,7 +88,7 @@ void Automata::convertir_a_AFD() {
 		ss << "S" << ultimo_numero;
 		ultimo_estado = ss.str();
 		
-		// Definir los estados a unir en base a outputs multiples
+		// Se crea un nuevo estado en base a la union de los estados del output multiple encontrado
 
 		vector<Estado>estados_a_unir;
 		int num_outputs = outputs_multiples.size();
@@ -102,10 +101,7 @@ void Automata::convertir_a_AFD() {
 		colocar_estado(nuevo_estado);
 		nuevos_estados.push_back(nuevo_estado);
 
-		 //cout << "Iteracion " << iteracion << endl; // Pruebas
-		 //cout << mostrar_funciones(); // Pruebas
-
-		// Se buscan nuevamente outputs multiples
+		// Se buscan nuevos outputs multiples que no hayan sido recorridos
 
 		outputs_multiples = encontrar_outputs_multiples(outputs_multiples_recorridos);
 	}
@@ -144,20 +140,23 @@ void Automata::convertir_a_AFD() {
 		}
 		colocar_estado(e);
 
-		// Se renombran los outputs nulos con el estado final
+		// Se renombran los outputs nulos con el nombre del estado final
 
 		vector<string> output_nulo; 
 		output_nulo.push_back("--");
 		reemplazar_outputs_por_nuevo_estado(output_nulo, e);
 	}
-
 }
 
 Estado Automata::unir_estados(vector<Estado> estados, string nombre, int nuevo_numero) {
 
+	// Se crea un nuevo estado en base a la unión de los distintos estados de output multiple
+	// el nuevo estado herada las funciones de los estados que lo componen
+	// tambien herada si alguno de los estados es de aceptacion
+
 	Estado nuevo_estado(nombre, nuevo_numero);
 	
-	vector<Funcion> funciones_base = estados.at(0).get_funciones(); // funciones del primer estado
+	vector<Funcion> funciones_base = estados.at(0).get_funciones(); // Funciones del primer estado
 	nuevo_estado.colocar_estado_contenido(estados.at(0).get_nombre());
 	if (estados.at(0).get_final()) nuevo_estado.set_final(true);
 
@@ -181,15 +180,21 @@ Estado Automata::unir_estados(vector<Estado> estados, string nombre, int nuevo_n
 
 Estado Automata::encontrar_estado(string nombre) {
 	
+	// Busca un estado en el Automata, si no lo encuentra retorna un estado de error
+
 	int num_estados = estados.size();
 	for (int i = 0; i < num_estados; i++) {
 		if (estados.at(i).get_nombre() == nombre) return estados.at(i);
 	}
-	Estado vacio("S1989", 1989);
-	return vacio;
+	Estado error("S1989", 1989); 
+	return error;
 }
 
 vector<string> Automata::encontrar_outputs_multiples(vector<vector<string>> recorridos) {
+
+	// Busca outputs multiples en cada una de las funciones de transicion de cada estado del automata
+	// Los resultados no pueden estar en la lista de outputs multiples recorridos
+	// Si no encuentra alguno, devuelve una lista vacia
 
 	int num_estados = estados.size();
 
@@ -215,12 +220,14 @@ vector<string> Automata::encontrar_outputs_multiples(vector<vector<string>> reco
 
 void Automata::reemplazar_outputs_por_nuevo_estado(vector<string> outputs_buscados, Estado nuevo_estado) {
 
+	// Reemplaza los outputs de cada estado con un nuevo nombre de estado asignado
+
 	vector<string> nuevo_output;
 	nuevo_output.push_back(nuevo_estado.get_nombre());
 
 	int num_estados = estados.size();
 
-	for (int n = 0; n < num_estados; n++) { // Nivel de estados
+	for (int n = 0; n < num_estados; n++) { 
 
 		estados.at(n).reemplazar_outputs(outputs_buscados, nuevo_output);
 	}
@@ -228,6 +235,8 @@ void Automata::reemplazar_outputs_por_nuevo_estado(vector<string> outputs_buscad
 }
 
 void Automata::remover_estados_no_accesibles() {
+
+	// Busca y remueve los estados no accesibles desde el estado inicial S0
 
 	vector<Estado> estados_antiguos = estados;
 	vector<string>estados_accedidos;
@@ -239,19 +248,14 @@ void Automata::remover_estados_no_accesibles() {
 	estados_revisados.push_back("S0");
 	vector<Estado>estados_actualizados;
 	
-	while (num_estados_accedidos < num_estados) {
+	while (num_estados_accedidos < num_estados) { 
 
 		vector<string> outputs_estado_activo = estado_activo.outputs_unicos();
 		int num_outputs_unicos = outputs_estado_activo.size();
 
-		// cout << "Estado activo " << estado_activo.get_nombre() << endl; // Pruebas
-		// cout << "Outputs: "; // Pruebas
-
-		for (int i = 0; i < num_outputs_unicos; i++) {
+		for (int i = 0; i < num_outputs_unicos; i++) { 
 
 			string output = outputs_estado_activo.at(i);
-
-			// cout << output << " "; // Pruebas
 
 			if (!Estado::existe(output, estados_accedidos)){
 				if (output != "--") {
@@ -260,12 +264,10 @@ void Automata::remover_estados_no_accesibles() {
 			}
 		}
 
-		// cout << endl << endl; // Pruebas
-
 		num_estados_accedidos = estados_accedidos.size();
 		bool finalizar_while = false;
 
-		for (int j = 0; j < num_estados_accedidos; j++) {
+		for (int j = 0; j < num_estados_accedidos; j++) { 
 
 			string estado_accedido = estados_accedidos.at(j);
 			if (!Estado::existe(estado_accedido, estados_revisados)) {
@@ -296,11 +298,10 @@ void Automata::remover_estados_no_accesibles() {
 
 void Automata::renombrar() {
 
-	// Renombrar los estados con numeracion correlativa despues de remover estados no accesibles
+	// Se renombran los estados con la numeracion correlativa despues de haber removido los estados no accesibles
 
 	vector<Estado> estados_antiguos = estados;
 	int num_estados = estados_antiguos.size();
-
 
 	vector<string> antiguos_nombres;
 	vector<string> nuevos_nombres;
@@ -322,24 +323,6 @@ void Automata::renombrar() {
 			nuevos_nombres.push_back(nuevo_nombre);
 		}
 	}
-
-	// Pruebas
-
-	//cout << "Pruebas " << endl;
-	//int num_an = antiguos_nombres.size();
-
-	//for (int i = 0; i < num_an; i++) {
-	//	string an = antiguos_nombres.at(i);
-	//	cout << an << " ";
-	//}
-	//cout << endl;
-	//for (int i = 0; i < num_an; i++) {
-	//	string aa = nuevos_nombres.at(i);
-	//	cout << aa << " ";
-	//}
-	//cout << endl;
-
-	// Pruebas
 
 	for (int l = 0; l < num_estados; l++) {
 
