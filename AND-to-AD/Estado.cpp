@@ -1,9 +1,10 @@
 #include "Estado.h"
 
 
-Estado::Estado(string nom)
+Estado::Estado(string nom, int num)
 {
 	nombre = nom;
+	numero = num;
 }
 
 string Estado::get_nombre() {
@@ -12,6 +13,14 @@ string Estado::get_nombre() {
 
 vector<Funcion> Estado::get_funciones() {
 	return funciones;
+}
+
+int Estado::get_numero() {
+	return numero;
+}
+
+void Estado::set_numero(int num) {
+	numero = num;
 }
 
 bool Estado::get_final() {
@@ -104,4 +113,67 @@ vector<string> Estado::outputs_unicos() {
 		}
 	}
 	return outputs_unicos;
+}
+
+void Estado::renombrar(vector<string> antiguos_nombres, vector<string> nuevos_nombres) {
+
+	// Se crean nuevas funciones para el estado con el nombre(numeracion) corregido
+
+	vector<Funcion> nuevas_funciones;
+	int num_funciones = funciones.size();
+
+	for (int i = 0; i < num_funciones; i++) { // Nivel de funciones
+
+		
+		Funcion funcion_actual = funciones.at(i);
+		string id_funcion_nueva = funcion_actual.get_id();
+		string input_funcion_nueva = funcion_actual.get_input();
+		vector<string> outputs_funcion_nueva;
+
+		vector<string> outputs = funciones.at(i).get_outputs();
+		int num_outputs = outputs.size();
+
+		for (int j = 0; j < num_outputs; j++) { // Nivel de outputs
+
+			string output = outputs.at(j);
+
+			if (existe(output,antiguos_nombres)) {
+
+				int index = encontrar(output, antiguos_nombres);
+				outputs_funcion_nueva.push_back(nuevos_nombres.at(index));
+			}
+			else outputs_funcion_nueva.push_back(output);
+		}
+
+		Funcion funcion_nueva(id_funcion_nueva, input_funcion_nueva, outputs_funcion_nueva);
+		nuevas_funciones.push_back(funcion_nueva);
+	}
+
+	funciones = nuevas_funciones;
+
+	// Se modifica el nombre del estado, de ser el caso
+
+	if (existe(nombre, antiguos_nombres)) {
+		int inde = encontrar(nombre,antiguos_nombres);
+		nombre = nuevos_nombres.at(inde);
+	}
+}
+
+
+bool Estado::existe(string busqueda, vector<string> lista) {
+
+	return find(lista.begin(), lista.end(), busqueda) != lista.end();
+}
+
+
+int Estado::encontrar(string busqueda, vector<string> lista) {
+
+	vector<string>::iterator itr = find(lista.begin(), lista.end(), busqueda);
+
+	if (itr != lista.cend()) {
+		return distance(lista.begin(), itr);
+	}
+	else {
+		return NULL;
+	}
 }

@@ -5,11 +5,13 @@
 #include "Funcion.h"
 #include <vector>
 #include <algorithm>
+#include <sstream>
 using namespace std;
 
 class Estado
 {
 	string nombre;
+	int numero; 
 	bool final; // Si es un estado de aceptación
 	vector<string> estados_contenidos; // Si es un estado producto de una unión
 	vector<Funcion> funciones;
@@ -17,10 +19,12 @@ class Estado
 
 public:
 
-	Estado(string);
+	Estado(string, int);
 	string get_nombre();
 	bool get_final();
 	void set_final(bool);
+	int get_numero();
+	void set_numero(int);
 	Funcion get_funcion(int);
 	vector<Funcion> get_funciones();
 	int get_num_funciones();
@@ -31,5 +35,8 @@ public:
 	void reemplazar_outputs(vector<string>, vector<string>);
 	bool comparar_outputs(vector<string>, vector <string>);
 	vector<string> outputs_unicos();
+	void renombrar(vector<string>,vector<string>);
+	static bool existe(string, vector<string>);
+	int encontrar(string, vector<string>);
 };
 

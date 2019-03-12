@@ -97,7 +97,7 @@ void Automata::convertir_a_AFD() {
 		for (int i = 0; i < num_outputs; i++) {
 			estados_a_unir.push_back(encontrar_estado(outputs_multiples.at(i)));
 		}
-		Estado nuevo_estado = unir_estados(estados_a_unir,ultimo_estado);
+		Estado nuevo_estado = unir_estados(estados_a_unir,ultimo_estado, ultimo_numero);
 
 		colocar_estado(nuevo_estado);
 		nuevos_estados.push_back(nuevo_estado);
@@ -128,7 +128,7 @@ void Automata::convertir_a_AFD() {
 		stringstream ss;
 		ss << "S" << ultimo_numero;
 		ultimo_estado = ss.str();
-		Estado e(ultimo_estado);
+		Estado e(ultimo_estado, ultimo_numero);
 		
 		int num_alfabeto = alfabeto.size();
 
@@ -153,9 +153,9 @@ void Automata::convertir_a_AFD() {
 
 }
 
-Estado Automata::unir_estados(vector<Estado> estados, string nombre) {
+Estado Automata::unir_estados(vector<Estado> estados, string nombre, int nuevo_numero) {
 
-	Estado nuevo_estado(nombre);
+	Estado nuevo_estado(nombre, nuevo_numero);
 	
 	vector<Funcion> funciones_base = estados.at(0).get_funciones(); // funciones del primer estado
 	nuevo_estado.colocar_estado_contenido(estados.at(0).get_nombre());
@@ -185,7 +185,7 @@ Estado Automata::encontrar_estado(string nombre) {
 	for (int i = 0; i < num_estados; i++) {
 		if (estados.at(i).get_nombre() == nombre) return estados.at(i);
 	}
-	Estado vacio("vacio");
+	Estado vacio("S1989", 1989);
 	return vacio;
 }
 
@@ -229,6 +229,7 @@ void Automata::reemplazar_outputs_por_nuevo_estado(vector<string> outputs_buscad
 
 void Automata::remover_estados_no_accesibles() {
 
+	vector<Estado> estados_antiguos = estados;
 	vector<string>estados_accedidos;
 	estados_accedidos.push_back("S0");
 	int num_estados = estados.size();
@@ -252,7 +253,7 @@ void Automata::remover_estados_no_accesibles() {
 
 			// cout << output << " "; // Pruebas
 
-			if (!existe(output, estados_accedidos)){
+			if (!Estado::existe(output, estados_accedidos)){
 				if (output != "--") {
 					estados_accedidos.push_back(output);
 				}
@@ -267,7 +268,7 @@ void Automata::remover_estados_no_accesibles() {
 		for (int j = 0; j < num_estados_accedidos; j++) {
 
 			string estado_accedido = estados_accedidos.at(j);
-			if (!existe(estado_accedido, estados_revisados)) {
+			if (!Estado::existe(estado_accedido, estados_revisados)) {
 				estados_revisados.push_back(estado_accedido);
 				estado_activo = encontrar_estado(estado_accedido);
 				break;
@@ -281,19 +282,6 @@ void Automata::remover_estados_no_accesibles() {
 		if (finalizar_while) break;
 	}
 
-	// Pruebas
-
-	//for (int l = 0; l < num_estados_accedidos; l++) {
-	//	cout << estados_accedidos.at(l) << " ";
-	//}
-
-	//cout << endl;
-
-	//for (int k = 0; k < num_estados; k++) {
-	//	Estado e = estados.at(k);
-	//	cout << e.get_nombre() << " ";
-	//}
-
 	num_estados_accedidos = estados_accedidos.size();
 	sort(estados_accedidos.begin(), estados_accedidos.end());
 
@@ -302,10 +290,63 @@ void Automata::remover_estados_no_accesibles() {
 		estados_actualizados.push_back(est);
 	}
 	
-	estados = estados_actualizados;
+	estados = estados_actualizados; 
 }
 
-bool Automata::existe(string busqueda, vector<string> lista) {
 
-	return find(lista.begin(), lista.end(), busqueda) != lista.end();
+void Automata::renombrar() {
+
+	// Renombrar los estados con numeracion correlativa despues de remover estados no accesibles
+
+	vector<Estado> estados_antiguos = estados;
+	int num_estados = estados_antiguos.size();
+
+
+	vector<string> antiguos_nombres;
+	vector<string> nuevos_nombres;
+	vector<Estado> estados_renombrados;
+
+
+	for (int n = 0; n < num_estados; n++) {
+
+		Estado estad = estados_antiguos.at(n);
+
+		if (estad.get_numero() != n) {
+
+			antiguos_nombres.push_back(estad.get_nombre());
+
+			string nuevo_nombre;
+			stringstream ss;
+			ss << "S" << n;
+			nuevo_nombre = ss.str();
+			nuevos_nombres.push_back(nuevo_nombre);
+		}
+	}
+
+	// Pruebas
+
+	//cout << "Pruebas " << endl;
+	//int num_an = antiguos_nombres.size();
+
+	//for (int i = 0; i < num_an; i++) {
+	//	string an = antiguos_nombres.at(i);
+	//	cout << an << " ";
+	//}
+	//cout << endl;
+	//for (int i = 0; i < num_an; i++) {
+	//	string aa = nuevos_nombres.at(i);
+	//	cout << aa << " ";
+	//}
+	//cout << endl;
+
+	// Pruebas
+
+	for (int l = 0; l < num_estados; l++) {
+
+		Estado estado = estados_antiguos.at(l);
+		estado.renombrar(antiguos_nombres, nuevos_nombres);
+		estados_renombrados.push_back(estado);
+	}
+
+	estados = estados_renombrados;
 }
