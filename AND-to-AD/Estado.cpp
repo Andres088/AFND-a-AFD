@@ -4,7 +4,6 @@
 Estado::Estado(string nom)
 {
 	nombre = nom;
-	existe = true;
 }
 
 string Estado::get_nombre() {
@@ -13,14 +12,6 @@ string Estado::get_nombre() {
 
 vector<Funcion> Estado::get_funciones() {
 	return funciones;
-}
-
-void Estado::set_existe(bool existencia) {
-	existe = existencia;
-}
-
-bool Estado::get_existe() {
-	return existe;
 }
 
 bool Estado::get_final() {

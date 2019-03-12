@@ -44,6 +44,19 @@ string Automata::mostrar_funciones() {
 		}
 		cadena = cadena + "\n";
 	}
+
+	cadena += "F={";
+	int con = 0;
+	for (int l = 0; l < num_estados; l++) {
+
+		Estado est = estados.at(l);
+		if (est.get_final()) {
+			if (con > 0) cadena += ",";
+			cadena += est.get_nombre();
+			con += 1;
+		}
+	}
+	cadena += "}\n";
 	return cadena;
 }
 
@@ -86,11 +99,8 @@ void Automata::convertir_a_AFD() {
 		}
 		Estado nuevo_estado = unir_estados(estados_a_unir,ultimo_estado);
 
-		
-
 		colocar_estado(nuevo_estado);
 		nuevos_estados.push_back(nuevo_estado);
-		//reemplazar_outputs_por_nuevo_estado(outputs_multiples, nuevo_estado); // Modificar
 
 		 //cout << "Iteracion " << iteracion << endl; // Pruebas
 		 //cout << mostrar_funciones(); // Pruebas
@@ -149,12 +159,14 @@ Estado Automata::unir_estados(vector<Estado> estados, string nombre) {
 	
 	vector<Funcion> funciones_base = estados.at(0).get_funciones(); // funciones del primer estado
 	nuevo_estado.colocar_estado_contenido(estados.at(0).get_nombre());
+	if (estados.at(0).get_final()) nuevo_estado.set_final(true);
 
 	int num_estados = estados.size();
 	int num_funciones = funciones_base.size();
 
 	for (int i = 1; i < num_estados; i++) { // Nivel de estados
 
+		if (estados.at(i).get_final()) nuevo_estado.set_final(true);
 		nuevo_estado.colocar_estado_contenido(estados.at(i).get_nombre());
 		vector<Funcion> funciones_agregar = estados.at(i).get_funciones();
 		

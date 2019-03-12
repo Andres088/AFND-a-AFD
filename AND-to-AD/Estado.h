@@ -11,7 +11,6 @@ class Estado
 {
 	string nombre;
 	bool final; // Si es un estado de aceptación
-	bool existe; // Si es un estado que ha sido descartado	
 	vector<string> estados_contenidos; // Si es un estado producto de una unión
 	vector<Funcion> funciones;
 	 
@@ -20,8 +19,6 @@ public:
 
 	Estado(string);
 	string get_nombre();
-	void set_existe(bool);
-	bool get_existe();
 	bool get_final();
 	void set_final(bool);
 	Funcion get_funcion(int);
