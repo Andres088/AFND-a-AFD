@@ -55,13 +55,18 @@ void Automata::convertir_a_AFD() {
 
 	// Busca outputs multiples en el automata para reemplazarlos por estados unicos
 
-	vector<string> outputs_multiples = encontrar_outputs_multiples();
+	vector <vector<string>> outputs_multiples_recorridos;
+	vector<string> outputs_multiples = encontrar_outputs_multiples(outputs_multiples_recorridos);
+	vector<Estado> nuevos_estados;
 	int iteracion = 0;
+	
 
 	while (outputs_multiples.size()!=0) { // Verifica que no hayan outputs multiples
 
+		outputs_multiples_recorridos.push_back(outputs_multiples);
+
 		iteracion++;
-		if (iteracion == 3) break;
+		//if (iteracion == 7) break; // Pruebas
 
 		// Se crea un nombre para un estado unico nuevo
 
@@ -81,14 +86,27 @@ void Automata::convertir_a_AFD() {
 		}
 		Estado nuevo_estado = unir_estados(estados_a_unir,ultimo_estado);
 
-		// Se reemplazan outputs multiples encontrados por nuevo estado
+		
 
-		reemplazar_outputs_por_nuevo_estado(outputs_multiples,nuevo_estado);
 		colocar_estado(nuevo_estado);
+		nuevos_estados.push_back(nuevo_estado);
+		//reemplazar_outputs_por_nuevo_estado(outputs_multiples, nuevo_estado); // Modificar
+
+		 //cout << "Iteracion " << iteracion << endl; // Pruebas
+		 //cout << mostrar_funciones(); // Pruebas
 
 		// Se buscan nuevamente outputs multiples
 
-		outputs_multiples = encontrar_outputs_multiples();
+		outputs_multiples = encontrar_outputs_multiples(outputs_multiples_recorridos);
+	}
+
+	// Se reemplazan los outputs multiples por los nuevos estados
+
+	int num_nuevos_estados = nuevos_estados.size();
+	for (int l = 0; l < num_nuevos_estados; l++) {
+		Estado nuevo_estado = nuevos_estados.at(l);
+		outputs_multiples = nuevo_estado.get_estados_contenidos();
+		reemplazar_outputs_por_nuevo_estado(outputs_multiples, nuevo_estado);
 	}
 
 	// Se crea el estado final con resultados nulos
@@ -159,7 +177,7 @@ Estado Automata::encontrar_estado(string nombre) {
 	return vacio;
 }
 
-vector<string> Automata::encontrar_outputs_multiples() {
+vector<string> Automata::encontrar_outputs_multiples(vector<vector<string>> recorridos) {
 
 	int num_estados = estados.size();
 
@@ -173,7 +191,10 @@ vector<string> Automata::encontrar_outputs_multiples() {
 			Funcion f = e.get_funcion(i);
 			vector<string> outputs = f.get_outputs();
 			int num_outputs = outputs.size();
-			if (num_outputs>1) return outputs;
+			if (num_outputs > 1) {
+				if (!(find(recorridos.begin(), recorridos.end(), outputs) != recorridos.end()))
+				return outputs;
+			}
 		}
 	}
 	vector<string> vacio; 
@@ -270,10 +291,6 @@ void Automata::remover_estados_no_accesibles() {
 	}
 	
 	estados = estados_actualizados;
-}
-
-void renombrar_nulos() {
-
 }
 
 bool Automata::existe(string busqueda, vector<string> lista) {

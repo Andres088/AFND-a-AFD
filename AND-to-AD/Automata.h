@@ -23,12 +23,11 @@ public:
 	string buscar_valor_alfabeto(int);
 	string mostrar_funciones();
 	void convertir_a_AFD();
-	vector<string> encontrar_outputs_multiples();
+	vector<string> encontrar_outputs_multiples(vector<vector<string>>);
 	Estado encontrar_estado(string);
 	Estado unir_estados(vector<Estado>, string);
 	void reemplazar_outputs_por_nuevo_estado(vector<string>, Estado);
 	void remover_estados_no_accesibles();
-	void renombrar_nulos();
 	bool existe(string, vector<string>);
 	
 };

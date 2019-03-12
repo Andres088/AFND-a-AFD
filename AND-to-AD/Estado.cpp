@@ -41,6 +41,10 @@ Funcion Estado::get_funcion(int n) {
 	return funciones.at(n);
 }
 
+vector<string> Estado::get_estados_contenidos() {
+	return estados_contenidos;
+}
+
 void Estado::colocar_estado_contenido(string estado) {
 	estados_contenidos.push_back(estado);
 }

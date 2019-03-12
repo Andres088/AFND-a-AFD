@@ -27,6 +27,7 @@ public:
 	Funcion get_funcion(int);
 	vector<Funcion> get_funciones();
 	int get_num_funciones();
+	vector<string> get_estados_contenidos();
 	void colocar_estado_contenido(string);
 	void colocar_funcion(Funcion);
 	void colocar_funcion(vector<Funcion>);
