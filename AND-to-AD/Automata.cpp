@@ -22,7 +22,7 @@ string Automata::buscar_valor_alfabeto(int i) {
 string Automata::mostrar_funciones() {
 
 	int num_estados = estados.size();
-	string cadena("Tabla del automata "+ nombre + "\n\n");
+	string cadena("\nTabla del automata "+ nombre + "\n\n");
 
 	for (int n = 0; n < num_estados; n++) { // Nivel de estados
 

@@ -1,7 +1,0 @@
-
-Directorio de pruebas: cd desktop\AFND-a-AFD
-
-- Falta colocar definitivos
-- Añadir log al commit.
-- Renombrar estados sin desechados.
-- Remover pruebas
